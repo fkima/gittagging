@@ -13,6 +13,7 @@ pipeline {
     }
 }
 
+// Increase Git TAG. For example: 1.0.0 -> 1.1.0 -> 1.1.1 -> 1.2.0 -> 2.0.0 ->
 void gitTagging() {
     String emailGitUser = 'user@useremailexample.com'
     String nameGitUser = 'User'
@@ -32,11 +33,13 @@ void gitTagging() {
     gitPushTag(gitCommitTag)
 }
 
+//
 String gitLastTaggedCommitHash() {
     result = ''
     try {
         result = sh(script: 'git rev-list --tags --max-count=1', returnStdout: true).trim()
     } catch (Exception ex) {
+        println(ex.getMessage())
         result = ''
     }
     println("gitLastTaggedCommitHash - ${result}")
