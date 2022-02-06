@@ -13,7 +13,7 @@ pipeline {
     }
 }
 
-// Increase Git TAG. For example: 1.0.0 -> 1.1.0 -> 1.1.1 -> 1.2.0 -> 2.0.0 ->
+// Main function for increase Git TAG. For example: 1.0.0 -> 1.1.0 -> 1.1.1 -> 1.2.0 -> 2.0.0 ->
 void gitTagging() {
     String emailGitUser = 'user@useremailexample.com'
     String nameGitUser = 'User'
@@ -33,7 +33,7 @@ void gitTagging() {
     gitPushTag(gitCommitTag)
 }
 
-//
+//Get git last tagget commit hash
 String gitLastTaggedCommitHash() {
     result = ''
     try {
@@ -46,9 +46,12 @@ String gitLastTaggedCommitHash() {
     return result
 }
 
+//Get git latest commit hash
 String gitLastCommitHash() {
     return sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
 }
+
+//Get git TAG for commit
 String gitCommitTag(String gitCommitTaggedCommitHash) {
     String result = ''
     if (gitCommitTaggedCommitHash.length() == 40) {
@@ -59,6 +62,7 @@ String gitCommitTag(String gitCommitTaggedCommitHash) {
     return result
 }
 
+//Parse git TAG for delimeter
 List<Integer> parsegitCommitTag(char gitCommitTagDelimeter, String tag) {
     List<String> tags = tag.tokenize(gitCommitTagDelimeter)
     List<Integer> intTags = []
@@ -68,11 +72,13 @@ List<Integer> parsegitCommitTag(char gitCommitTagDelimeter, String tag) {
     return intTags
 }
 
+//Add user for commited TAG
 void addGitCommitUser(String emailGitUser, String nameGitUser) {
     sh(script: "git config user.email ${emailGitUser}", returnStdout: true).trim()
     sh(script: "git config user.name ${nameGitUser}", returnStdout: true).trim()
 }
 
+//Increments the TAG depending on the branch
 List<Integer> gitCommitTagIncrease(
     List<Integer> tags,
     String majorBranchName,
@@ -91,19 +97,23 @@ List<Integer> gitCommitTagIncrease(
     return tags
     }
 
+// Add git TAG to local repository
 void gitAddTag(String gitCommitTag, String gitLastCommitHash) {
     sh(script: "git tag -a ${gitCommitTag} -m 'Add TAG ${gitCommitTag}' ${gitLastCommitHash}", \
     returnStdout: true).trim()
 }
 
+// Push git TAG to remote repository
 void gitPushTag(String gitCommitTag) {
     sh(script: "git push origin ${gitCommitTag}", returnStdout: true).trim()
 }
 
+//Get git log
 void getGitLog() {
     sh(script: 'git log', returnStdout: true).trim()
 }
 
+//Get remote repository URL
 String getGitRemoteRepositoryUrl() {
     return sh(script: 'git config --get remote.origin.url', returnStdout: true).trim()
 }
