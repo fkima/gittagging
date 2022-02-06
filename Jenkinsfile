@@ -3,13 +3,6 @@
 pipeline {
     agent any
     stages {
-        // stage('Checkout') {
-        //     steps {
-        //         script {
-        //             checkout([$class: 'GitSCM', branches: [[name: "*/${env.BRANCH_NAME}"]], extensions: [], userRemoteConfigs: [[credentialsId: 'GitHub', url: 'https://github.com/kimachinskiy/gittagging.git']]])
-        //         }
-        //     }
-        // }
         stage('New major version!') {
             steps {
                 script {
