@@ -6,6 +6,15 @@ pipeline {
         stage('New path version12313!') {
             steps {
                 script {
+                    checkout([$class: 'GitSCM', branches: [[name: "*/${env.BRANCH_NAME}"]], extensions: [], userRemoteConfigs: [[credentialsId: 'GitHub', url: 'https://github.com/kimachinskiy/gittagging.git']]])
+                }
+            }
+        }
+    }
+    stages {
+        stage('New path version12313!') {
+            steps {
+                script {
                     gitTagging()
                 }
             }
