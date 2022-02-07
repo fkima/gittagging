@@ -10,8 +10,6 @@ pipeline {
                 }
             }
         }
-    }
-    stages {
         stage('New path version12313!') {
             steps {
                 script {
@@ -20,7 +18,7 @@ pipeline {
             }
         }
     }
-}
+    }
 
 // Main function for increase Git TAG. For example: 1.0.0 -> 1.1.0 -> 1.1.1 -> 1.2.0 -> 2.0.0 ->
 void gitTagging() {
