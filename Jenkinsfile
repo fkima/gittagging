@@ -3,7 +3,7 @@
 pipeline {
     agent any
     stages {
-        stage('New path version!') {
+        stage('New path version12313!') {
             steps {
                 script {
                     gitTagging()
