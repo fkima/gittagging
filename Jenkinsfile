@@ -14,7 +14,7 @@ pipeline {
                 }
             }
         }
-        stage('New path version12!') {
+        stage('New path version1212!') {
             steps {
                 script {
                     gitTagging()
