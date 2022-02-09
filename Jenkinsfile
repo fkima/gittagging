@@ -6,7 +6,11 @@ pipeline {
         stage('Checkout') {
             steps {
                 script {
-                    checkout([$class: 'GitSCM', branches: [[name: "*/${env.BRANCH_NAME}"]], extensions: [], userRemoteConfigs: [[credentialsId: 'GitHub', url: 'https://github.com/kimachinskiy/gittagging.git']]])
+                    String repositoryURL = sh(script: 'git config --get remote.origin.url', returnStdout: true).trim()
+                    checkout([$class: 'GitSCM', \
+                    branches: [[name: "*/${env.BRANCH_NAME}"]], \
+                    extensions: [], \
+                    userRemoteConfigs: [[credentialsId: 'GitHub', url: "${repositoryURL}"]]])
                 }
             }
         }
