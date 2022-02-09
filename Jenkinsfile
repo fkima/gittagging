@@ -30,7 +30,7 @@ void gitTagging() {
     String pathBranchName = 'fix'
 
     String gitLastCommitHash = gitLastCommitHash()
-    println("${isCommitTagged(gitLastCommitHash)}====123")
+
     if (!isCommitTagged(gitLastCommitHash)) {
         String gitCommitTag = gitLastTag()
         List<Integer> tags = parseGitCommitTag(gitCommitTagDelimeter, gitCommitTag)
@@ -47,7 +47,14 @@ String gitLastCommitHash() {
     return sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
 }
 
-// Last TAG in current branch
+//Checks a commit for a tag
+boolean isCommitTagged(String commitHash) {
+    String result = sh(script: "git tag --points-at ${commitHash}", returnStdout: true).trim()
+    boolean isTagged = result ? true : false
+    return isTagged
+}
+
+// Get last TAG in current branch
 String gitLastTag() {
     String result = sh(script: 'git describe --abbrev=0', returnStdout: true).trim()
     if (!result && BRANCH_NAME == majorBranchName) {
@@ -101,45 +108,3 @@ void gitAddTag(String gitCommitTag, String gitLastCommitHash) {
 void gitPushTag(String gitCommitTag) {
     sh(script: "git push origin ${gitCommitTag}", returnStdout: true).trim()
 }
-
-//Get git log
-void getGitLog() {
-    sh(script: 'git log', returnStdout: true).trim()
-}
-
-//Get remote repository URL
-String getGitRemoteRepositoryUrl() {
-    return sh(script: 'git config --get remote.origin.url', returnStdout: true).trim()
-}
-
-boolean isCommitTagged(String commitHash) {
-    String result = sh(script: "git tag --points-at ${commitHash}", returnStdout: true).trim()
-    println("${result}=========================================")
-    boolean isTagged = result ? true : false
-    println("${isTagged}=========================================")
-    return isTagged
-}
-
-// //Get git last tagget commit hash
-// String gitLastTaggedCommitHash() {
-//     result = ''
-//     try {
-//         result = sh(script: 'git rev-list --tags --max-count=1', returnStdout: true).trim()
-//     } catch (Exception ex) {
-//         println(ex.getMessage())
-//         result = ''
-//     }
-//     println("gitLastTaggedCommitHash - ${result}")
-//     return result
-// }
-
-// //Get git TAG for commit
-// String gitCommitTag(String gitCommitTaggedCommitHash) {
-//     String result = ''
-//     if (gitCommitTaggedCommitHash.length() == 40) {
-//         result = sh(script: "git describe --tags ${gitCommitTaggedCommitHash}", returnStdout: true).trim()
-//     } else {
-//         result = '0.0.0'
-//     }
-//     return result
-// }
