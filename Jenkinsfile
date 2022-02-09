@@ -30,6 +30,7 @@ void gitTagging() {
     String pathBranchName = 'fix'
 
     String gitLastCommitHash = gitLastCommitHash()
+    println("${isCommitTagged(gitLastCommitHash)}====123")
     if (!isCommitTagged(gitLastCommitHash)) {
         String gitCommitTag = gitLastTag()
         List<Integer> tags = parseGitCommitTag(gitCommitTagDelimeter, gitCommitTag)
@@ -113,8 +114,9 @@ String getGitRemoteRepositoryUrl() {
 
 boolean isCommitTagged(String commitHash) {
     String result = sh(script: "git describe --tags ${commitHash}", returnStdout: true).trim()
-    println("'${result}'")
+    println("${result}=========================================")
     boolean isTagged = result ? true : false
+    println("${isTagged}=========================================")
     return isTagged
 }
 
