@@ -56,8 +56,11 @@ boolean isCommitTagged(String commitHash) {
 
 // Get last TAG in current branch
 String gitLastTag() {
-    String result = sh(script: 'git describe --abbrev=0', returnStdout: true).trim()
-    if (!result && BRANCH_NAME == majorBranchName) {
+    String result
+    try {
+        result = sh(script: 'git describe --abbrev=0', returnStdout: true).trim()
+    } 
+    catch (Exception ex) {
         result = '0.0.0'
     }
     return result
