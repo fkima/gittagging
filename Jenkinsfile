@@ -130,7 +130,7 @@ String getGitRemoteRepositoryUrl() {
 // && BRANCH_NAME == majorBranchName
 String gitLastTag() {
     String result = sh(script: 'git describe --abbrev=0', returnStdout: true).trim()
-    if (!result) {
+    if (!result && BRANCH_NAME == majorBranchName) {
         result = '0.0.0'
     }
     return result
