@@ -18,7 +18,7 @@ pipeline {
             }
         }
     }
-    }
+}
 
 // Main function for increase Git TAG. For example: 1.0.0 -> 1.1.0 -> 1.1.1 -> 1.2.0 -> 2.0.0 ->
 void gitTagging() {
@@ -30,13 +30,15 @@ void gitTagging() {
     String pathBranchName = 'fix'
 
     String gitLastCommitHash = gitLastCommitHash()
-    String gitCommitTag = gitLastTag()
-    List<Integer> tags = parseGitCommitTag(gitCommitTagDelimeter, gitCommitTag)
-    List<Integer> gitCommitTags = gitCommitTagIncrease(tags, majorBranchName, minorBranchName, pathBranchName )
-    gitCommitTag = gitCommitTags.join(gitCommitTagDelimeter as String)
-    addGitCommitUser(emailGitUser, nameGitUser)
-    gitAddTag(gitCommitTag, gitLastCommitHash)
-    gitPushTag(gitCommitTag)
+    if (!isCommitTaged) {
+        String gitCommitTag = gitLastTag()
+        List<Integer> tags = parseGitCommitTag(gitCommitTagDelimeter, gitCommitTag)
+        List<Integer> gitCommitTags = gitCommitTagIncrease(tags, majorBranchName, minorBranchName, pathBranchName )
+        gitCommitTag = gitCommitTags.join(gitCommitTagDelimeter as String)
+        addGitCommitUser(emailGitUser, nameGitUser)
+        gitAddTag(gitCommitTag, gitLastCommitHash)
+        gitPushTag(gitCommitTag)
+    }
 }
 
 //Get git latest commit hash
@@ -109,7 +111,7 @@ String getGitRemoteRepositoryUrl() {
     return sh(script: 'git config --get remote.origin.url', returnStdout: true).trim()
 }
 
-boolean isCommitTaged(String commitHash){
+boolean isCommitTaged(String commitHash) {
     String result = sh(script: "git describe --tags ${commitHash}", returnStdout: true).trim()
     boolean isTagged = result ? True : False
     return isTagged
@@ -127,7 +129,6 @@ boolean isCommitTaged(String commitHash){
 //     println("gitLastTaggedCommitHash - ${result}")
 //     return result
 // }
-
 
 // //Get git TAG for commit
 // String gitCommitTag(String gitCommitTaggedCommitHash) {
