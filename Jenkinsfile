@@ -125,3 +125,17 @@ String getGitRemoteRepositoryUrl() {
     return sh(script: 'git config --get remote.origin.url', returnStdout: true).trim()
 }
 
+String gitLastTag() {
+    String result = sh(script: 'git describe --abbrev=0', returnStdout: true).trim()
+    if (!result && BRANCH_NAME == majorBranchName) {
+        result = '0.0.0'
+    }
+    return result
+}
+
+boolean isLastCommitTaged(){
+    String lastCommitHash = gitLastCommitHash()
+    String result = sh(script: "git describe --tags ${lastCommitHash}", returnStdout: true).trim()
+    boolean isTagged = result ? True : False
+    return isTagged
+}
