@@ -30,7 +30,7 @@ void gitTagging() {
     String pathPranchName = 'fix'
 
     // String gitLastTaggedCommitHash = gitLastTaggedCommitHash()
-    // String gitLastCommitHash = gitLastCommitHash()
+    gitLastCommitHash = gitLastCommitHash()
     // String gitCommitTag = gitCommitTag(gitLastTaggedCommitHash)
     String gitCommitTag = gitLastTag()
     List<Integer> tags = parsegitCommitTag(gitCommitTagDelimeter, gitCommitTag)
