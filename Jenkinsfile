@@ -29,9 +29,10 @@ void gitTagging() {
     String minorBranchName = 'develop'
     String pathPranchName = 'fix'
 
-    String gitLastTaggedCommitHash = gitLastTaggedCommitHash()
-    String gitLastCommitHash = gitLastCommitHash()
-    String gitCommitTag = gitCommitTag(gitLastTaggedCommitHash)
+    // String gitLastTaggedCommitHash = gitLastTaggedCommitHash()
+    gitLastCommitHash = gitLastCommitHash()
+    // String gitCommitTag = gitCommitTag(gitLastTaggedCommitHash)
+    String gitCommitTag = gitLastTag()
     List<Integer> tags = parsegitCommitTag(gitCommitTagDelimeter, gitCommitTag)
     List<Integer> gitCommitTags = gitCommitTagIncrease(tags, majorBranchName, minorBranchName, pathPranchName )
     gitCommitTag = gitCommitTags.join(gitCommitTagDelimeter as String)
@@ -125,3 +126,22 @@ String getGitRemoteRepositoryUrl() {
     return sh(script: 'git config --get remote.origin.url', returnStdout: true).trim()
 }
 
+// Last TAG in current branch
+// && BRANCH_NAME == majorBranchName
+String gitLastTag() {
+    String result = sh(script: 'git describe --abbrev=0', returnStdout: true).trim()
+    if (!result && BRANCH_NAME == majorBranchName) {
+        result = '0.0.0'
+    }
+    return result
+}
+
+boolean isCommitTaged(String commitHash){
+    String result = sh(script: "git describe --tags ${commitHash}", returnStdout: true).trim()
+    boolean isTagged = result ? True : False
+    return isTagged
+}
+
+// boolean isRepositoryHaveTags(){
+    
+// }
