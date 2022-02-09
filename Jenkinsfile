@@ -29,9 +29,7 @@ void gitTagging() {
     String minorBranchName = 'develop'
     String pathPranchName = 'fix'
 
-    // String gitLastTaggedCommitHash = gitLastTaggedCommitHash()
     gitLastCommitHash = gitLastCommitHash()
-    // String gitCommitTag = gitCommitTag(gitLastTaggedCommitHash)
     String gitCommitTag = gitLastTag()
     List<Integer> tags = parsegitCommitTag(gitCommitTagDelimeter, gitCommitTag)
     List<Integer> gitCommitTags = gitCommitTagIncrease(tags, majorBranchName, minorBranchName, pathPranchName )
