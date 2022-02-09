@@ -127,7 +127,6 @@ String getGitRemoteRepositoryUrl() {
 }
 
 // Last TAG in current branch
-// && BRANCH_NAME == majorBranchName
 String gitLastTag() {
     String result = sh(script: 'git describe --abbrev=0', returnStdout: true).trim()
     if (!result && BRANCH_NAME == majorBranchName) {
@@ -141,7 +140,3 @@ boolean isCommitTaged(String commitHash){
     boolean isTagged = result ? True : False
     return isTagged
 }
-
-// boolean isRepositoryHaveTags(){
-    
-// }
