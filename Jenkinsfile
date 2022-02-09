@@ -113,7 +113,7 @@ String getGitRemoteRepositoryUrl() {
 
 boolean isCommitTagged(String commitHash) {
     String result = sh(script: "git describe --tags ${commitHash}", returnStdout: true).trim()
-    boolean isTagged = result ? True : False
+    boolean isTagged = result ? true : false
     return isTagged
 }
 
