@@ -27,29 +27,16 @@ void gitTagging() {
     char gitCommitTagDelimeter = '.'
     String majorBranchName = 'main'
     String minorBranchName = 'develop'
-    String pathPranchName = 'fix'
+    String pathBranchName = 'fix'
 
-    gitLastCommitHash = gitLastCommitHash()
+    String gitLastCommitHash = gitLastCommitHash()
     String gitCommitTag = gitLastTag()
-    List<Integer> tags = parsegitCommitTag(gitCommitTagDelimeter, gitCommitTag)
-    List<Integer> gitCommitTags = gitCommitTagIncrease(tags, majorBranchName, minorBranchName, pathPranchName )
+    List<Integer> tags = parseGitCommitTag(gitCommitTagDelimeter, gitCommitTag)
+    List<Integer> gitCommitTags = gitCommitTagIncrease(tags, majorBranchName, minorBranchName, pathBranchName )
     gitCommitTag = gitCommitTags.join(gitCommitTagDelimeter as String)
     addGitCommitUser(emailGitUser, nameGitUser)
     gitAddTag(gitCommitTag, gitLastCommitHash)
     gitPushTag(gitCommitTag)
-}
-
-//Get git last tagget commit hash
-String gitLastTaggedCommitHash() {
-    result = ''
-    try {
-        result = sh(script: 'git rev-list --tags --max-count=1', returnStdout: true).trim()
-    } catch (Exception ex) {
-        println(ex.getMessage())
-        result = ''
-    }
-    println("gitLastTaggedCommitHash - ${result}")
-    return result
 }
 
 //Get git latest commit hash
@@ -57,19 +44,17 @@ String gitLastCommitHash() {
     return sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
 }
 
-//Get git TAG for commit
-String gitCommitTag(String gitCommitTaggedCommitHash) {
-    String result = ''
-    if (gitCommitTaggedCommitHash.length() == 40) {
-        result = sh(script: "git describe --tags ${gitCommitTaggedCommitHash}", returnStdout: true).trim()
-    } else {
+// Last TAG in current branch
+String gitLastTag() {
+    String result = sh(script: 'git describe --abbrev=0', returnStdout: true).trim()
+    if (!result && BRANCH_NAME == majorBranchName) {
         result = '0.0.0'
     }
     return result
 }
 
 //Parse git TAG for delimeter
-List<Integer> parsegitCommitTag(char gitCommitTagDelimeter, String tag) {
+List<Integer> parseGitCommitTag(char gitCommitTagDelimeter, String tag) {
     List<String> tags = tag.tokenize(gitCommitTagDelimeter)
     List<Integer> intTags = []
     for (item in tags) {
@@ -89,7 +74,7 @@ List<Integer> gitCommitTagIncrease(
     List<Integer> tags,
     String majorBranchName,
     String minorBranchName,
-    String pathPranchName) {
+    String pathBranchName) {
     if (BRANCH_NAME == majorBranchName) {
         tags[0] += 1
         tags[1] = 0
@@ -97,7 +82,7 @@ List<Integer> gitCommitTagIncrease(
     } else if (BRANCH_NAME == minorBranchName) {
         tags[1] += 1
         tags[2] = 0
-    } else if (BRANCH_NAME == pathPranchName) {
+    } else if (BRANCH_NAME == pathBranchName) {
         tags[2] += 1
     }
     return tags
@@ -124,17 +109,33 @@ String getGitRemoteRepositoryUrl() {
     return sh(script: 'git config --get remote.origin.url', returnStdout: true).trim()
 }
 
-// Last TAG in current branch
-String gitLastTag() {
-    String result = sh(script: 'git describe --abbrev=0', returnStdout: true).trim()
-    if (!result && BRANCH_NAME == majorBranchName) {
-        result = '0.0.0'
-    }
-    return result
-}
-
 boolean isCommitTaged(String commitHash){
     String result = sh(script: "git describe --tags ${commitHash}", returnStdout: true).trim()
     boolean isTagged = result ? True : False
     return isTagged
 }
+
+// //Get git last tagget commit hash
+// String gitLastTaggedCommitHash() {
+//     result = ''
+//     try {
+//         result = sh(script: 'git rev-list --tags --max-count=1', returnStdout: true).trim()
+//     } catch (Exception ex) {
+//         println(ex.getMessage())
+//         result = ''
+//     }
+//     println("gitLastTaggedCommitHash - ${result}")
+//     return result
+// }
+
+
+// //Get git TAG for commit
+// String gitCommitTag(String gitCommitTaggedCommitHash) {
+//     String result = ''
+//     if (gitCommitTaggedCommitHash.length() == 40) {
+//         result = sh(script: "git describe --tags ${gitCommitTaggedCommitHash}", returnStdout: true).trim()
+//     } else {
+//         result = '0.0.0'
+//     }
+//     return result
+// }
